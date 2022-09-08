@@ -8,5 +8,5 @@ type Category struct {
 type CategoryService interface {
 	GetAllCategory() ([]*Category, error)
 	ShowCategory(id int) (*Category, error)
-	CreateCategory() error
+	CreateCategory() (int, error)
 }
