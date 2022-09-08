@@ -36,7 +36,7 @@ func (c Category) ShowCategory(id int) (*model.Category, error) {
 	err := row.Scan(&c.ID, &c.Name)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, errors.New("insert failed")
+			return nil, errors.New("empty result")
 		}
 
 		return nil, err

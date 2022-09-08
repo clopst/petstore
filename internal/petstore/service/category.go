@@ -17,6 +17,9 @@ func GetAllCategory() ([]*model.Category, error) {
 	if err != nil {
 		return nil, err
 	}
+	if categories == nil {
+		categories = make([]*model.Category, 0)
+	}
 
 	return categories, nil
 }

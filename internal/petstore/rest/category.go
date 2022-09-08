@@ -12,18 +12,24 @@ import (
 func GetAllCategory(c echo.Context) error {
 	res, err := service.GetAllCategory()
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, res)
 }
 
 func ShowCategory(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Incorrect parameter.")
+	}
 
 	res, err := service.ShowCategory(id)
+	if res == nil {
+		return echo.NewHTTPError(http.StatusNotFound, "No data found.")
+	}
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -33,12 +39,12 @@ func CreateCategory(c echo.Context) error {
 	category := new(db.Category)
 
 	if err := c.Bind(category); err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	res, err := service.CreateCategory(category)
 	if err != nil {
-		panic(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, res)
