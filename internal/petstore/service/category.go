@@ -21,15 +21,15 @@ func GetAllCategory() ([]*model.Category, error) {
 	return categories, nil
 }
 
-func CreateCategory(c *db.Category) (int, error) {
+func CreateCategory(c *db.Category) (*model.Category, error) {
 	categoryService = c
 
-	id, err := categoryService.CreateCategory()
+	category, err := categoryService.CreateCategory()
 	if err != nil {
-		return id, err
+		return nil, err
 	}
 
-	return id, nil
+	return category, nil
 }
 
 func ShowCategory(id int) (*model.Category, error) {

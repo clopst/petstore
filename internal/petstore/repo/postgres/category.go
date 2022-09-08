@@ -11,22 +11,23 @@ import (
 type Category model.Category
 type CategoryService model.CategoryService
 
-func (c *Category) CreateCategory() (int, error) {
+func (c *Category) CreateCategory() (*model.Category, error) {
 	row := database.DBClient.QueryRow(
-		"INSERT INTO categories (name) VALUES ($1) RETURNING id;",
+		"INSERT INTO categories (name) VALUES ($1) RETURNING *;",
 		c.Name,
 	)
 
-	err := row.Scan(&c.ID)
+	err := row.Scan(&c.ID, &c.Name)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return c.ID, errors.New("insert failed")
+			return nil, errors.New("insert failed")
 		}
 
-		return c.ID, err
+		return nil, err
 	}
 
-	return c.ID, nil
+	category := model.Category(*c)
+	return &category, nil
 }
 
 func (c Category) ShowCategory(id int) (*model.Category, error) {
